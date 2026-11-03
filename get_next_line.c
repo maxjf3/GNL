@@ -6,45 +6,42 @@
 /*   By: mjardin <mjardin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/30 22:57:22 by mjardin           #+#    #+#             */
-/*   Updated: 2026/11/02 16:52:00 by mjardin          ###   ########.fr       */
+/*   Updated: 2026/11/03 21:05:39 by mjardin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int		ft_get_buffer_size(char *buffer, int *buf_index)
-{
-	int	buf;
-
-	buf = (*buf_index);
-	while(buffer[buf] && buffer[buf] != '\n')
-		buf++;
-	return (buf);
-}
 char	*get_next_line(int fd)
 {
-	char			*buffer;
-	int				i;
-	char			*res;
-	int				buf_size;
-	static int		buf_index;
+	static char	*buffer;
+	static int	first_time;
+	static int	index_buffer;
+	int			index_res;
+	char		*res;
 
-	i = 0;
-	buf_size = 0;
-	buffer = malloc(BUFFER_SIZE * sizeof(char));
-	if (!buffer)
-		return (NULL);	
-	read(fd, buffer, BUFFER_SIZE);
-	buf_size = ft_get_buffer_size(buffer, &buf_index);
-	res = malloc(buf_size * sizeof(char));
-	if (!res)
+	index_res = 0;
+	if (fd <= 0)
 		return (NULL);
-	while (i <= buf_size)
+	if (first_time <= 0)
+		buffer = init_buffer(fd, &first_time);
+	res = malloc(get_next_line_size(buffer, index_buffer));
+	while (buffer[index_buffer])
 	{
-		res[i] = buffer[buf_index];
-		i++;
-		buf_index++;
+		if (index_buffer == ft_strlen(buffer))
+		{
+			free(buffer);
+			return (NULL);
+		}
+		if (buffer[index_buffer] == '\n')
+		{
+			res[index_res] = buffer[index_buffer];
+			index_buffer++;
+			return (res);
+		}
+		res[index_res] = buffer[index_buffer];
+		index_buffer++;
+		index_res++;
 	}
-	free(buffer);
 	return (res);
 }
