@@ -16,16 +16,13 @@ int	main(void)
 	}
 	res = get_next_line(fd);
 	printf("%s", res);
+
 	res = get_next_line(fd);
 	printf("%s", res);
+
 	res = get_next_line(fd);
 	printf("%s", res);
-	res = get_next_line(fd);
-	printf("%s", res);
-	res = get_next_line(fd);
-	printf("%s", res);
-	res = get_next_line(fd);
-	printf("%s", res);
+
 	free(res);
 	return (0);
 }
