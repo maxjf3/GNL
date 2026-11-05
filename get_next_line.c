@@ -6,7 +6,7 @@
 /*   By: max <max@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/30 22:57:22 by mjardin           #+#    #+#             */
-/*   Updated: 2026/11/05 22:01:26 by max              ###   ########.fr       */
+/*   Updated: 2026/11/05 22:40:07 by max              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,48 +33,55 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*get_next_line(int fd)
+char	*get_next_line_helper(int fd, char **save)
 {
-	static char	*save;
-	char		*buffer;
-	char		*line;
-	char		*tmp;
-	int			bytes;
+	char	*buffer;
+	char	*tmp;
+	int		bytes;
 
 	bytes = 1;
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
-		return (ft_free(buffer, &save));
-	if (!save)
-	{
-		save = malloc(1);
-		if (!save)
-			return (ft_free(buffer, 0));
-		save[0] = '\0';
-	}
-	while (!ft_got_nl(save) && bytes > 0)
+		return (ft_free(buffer, save));
+	while (!ft_got_nl(*save) && bytes > 0)
 	{
 		bytes = read(fd, buffer, BUFFER_SIZE);
 		if (bytes > 0)
 		{
 			buffer[bytes] = '\0';
-			tmp = ft_strjoin(save, buffer);
+			tmp = ft_strjoin(*save, buffer);
 			if (!tmp)
-				return (ft_free(buffer, &save));
-			free(save);
-			save = tmp;
+				return (ft_free(buffer, save));
+			free(*save);
+			*save = tmp;
 		}
 		if (bytes == -1)
-			return (ft_free(buffer, &save));
+			return (ft_free(buffer, save));
 	}
+	free(buffer);
+	return (*save);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*save;
+	char		*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	if (!save)
+	{
+		save = malloc(1);
+		if (!save)
+			return (NULL);
+		save[0] = '\0';
+	}
+	get_next_line_helper(fd, &save);
 	if ((!save || save[0] == '\0'))
-		return (ft_free(buffer, &save));
+		return (ft_free(0, &save));
 	line = ft_get_line(save);
 	if (!line)
-		return (ft_free(buffer, &save));
+		return (ft_free(0, &save));
 	save = ft_clean_save(save);
-	free(buffer);
 	return (line);
 }
