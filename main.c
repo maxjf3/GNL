@@ -6,7 +6,7 @@
 /*   By: max <max@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/05 00:27:38 by max               #+#    #+#             */
-/*   Updated: 2026/11/05 00:30:15 by max              ###   ########.fr       */
+/*   Updated: 2026/11/05 21:25:01 by max              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ int	main(void)
 	fd = open("test", O_RDONLY);
 	if (fd == -1)
 		return (1);
-	line = get_next_line(fd)
-		while (line != NULL)
+	line = get_next_line(fd);
+	while (line != NULL)
 	{
 		printf("%s", line);
 		free(line);

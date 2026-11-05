@@ -6,7 +6,7 @@
 /*   By: max <max@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/31 15:23:38 by mjardin           #+#    #+#             */
-/*   Updated: 2026/11/05 00:30:42 by max              ###   ########.fr       */
+/*   Updated: 2026/11/05 21:42:51 by max              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,10 @@ char	*ft_get_line(char *s)
 	char	*res;
 
 	i = 0;
-	while (s[i])
-	{
-		if (s[i] == '\n')
-		{
-			i++;
-			break ;
-		}
+	while (s[i] && s[i] != '\n')
 		i++;
-	}
+	if (s[i] == '\n')
+		i++;
 	res = malloc(i + 1);
 	if (!res)
 		return (NULL);
@@ -100,26 +95,15 @@ char	*ft_clean_save(char *s)
 
 	i = 0;
 	j = 0;
-	while (s[i])
-	{
-		if (s[i] == '\n')
-		{
-			i++;
-			break ;
-		}
+	while (s[i] && s[i] != '\n')
 		i++;
-	}
+	if (s[i] == '\n')
+		i++;
 	if (i == ft_strlen(s))
-	{
-		free(s);
-		return (NULL);
-	}
+		return (ft_free(s, 0));
 	res = malloc((ft_strlen(s) - i) + 1);
 	if (!res)
-	{
-		free(s);
-		return (NULL);
-	}
+		return (ft_free(s, 0));
 	while (s[i])
 	{
 		res[j] = s[i];
@@ -133,8 +117,12 @@ char	*ft_clean_save(char *s)
 
 char	*ft_free(char *buffer, char **save)
 {
-	free(buffer);
-	free(*save);
-	*save = NULL;
+	if (buffer)
+		free(buffer);
+	if (save)
+	{
+		free(*save);
+		*save = NULL;
+	}
 	return (NULL);
 }
