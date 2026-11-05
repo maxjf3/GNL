@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: max <max@student.42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/05 00:27:38 by max               #+#    #+#             */
+/*   Updated: 2026/11/05 00:30:15 by max              ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 #include <stdio.h>
@@ -5,24 +17,19 @@
 
 int	main(void)
 {
-	char	*res;
 	int		fd;
-	
+	char	*line;
+
 	fd = open("test", O_RDONLY);
-	if (!fd)
+	if (fd == -1)
+		return (1);
+	line = get_next_line(fd)
+		while (line != NULL)
 	{
-		printf("Error\n");
-		return -1;
+		printf("%s", line);
+		free(line);
+		line = get_next_line(fd);
 	}
-	res = get_next_line(fd);
-	printf("%s", res);
-
-	res = get_next_line(fd);
-	printf("%s", res);
-
-	res = get_next_line(fd);
-	printf("%s", res);
-
-	free(res);
+	close(fd);
 	return (0);
 }
